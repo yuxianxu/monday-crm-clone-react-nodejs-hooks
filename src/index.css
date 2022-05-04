@@ -8,6 +8,11 @@ html, body {
     display: flex;
 }
 
+#link {
+    text-decoration: none;
+    color: rgb(46, 46, 46);
+}
+
 /*------ Nav -----*/
 
 nav {
@@ -53,3 +58,47 @@ nav .icon {
     display: flex;
     width: 100%;
 }
+
+.ticket-card #link {
+    display: flex;
+    width: 100%;
+}
+
+.ticket-card #link > * {
+    border-color: rgb(221, 221, 221);
+    margin: 2px;
+    padding: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ticket-card .ticket-color {
+    width: 15px !important;
+    margin: 2px !important;
+    margin: 2px;
+}
+
+.ticket-card .avatar-container {
+    display: flex;
+    justify-content: center;
+    width: 80px;
+}
+
+.ticket-card .img-container {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.ticket-card .img-container img {
+    width: 100%;
+}
+
+.ticket-card .status-display {
+    display: flex;
+    justify-content: center;
+}
+
+ 

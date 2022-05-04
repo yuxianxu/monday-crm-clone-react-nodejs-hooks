@@ -1,7 +1,16 @@
-const AvatarDisplay = () => {
-    return (
-        <div>AvatarDisplay</div>
-    )
-}
+import blankAvatar from '../images/blank-profile.png'
 
-export default AvatarDisplay
+const AvatarDisplay = ({ ticket }) => {
+  return (
+    <div className="avatar-container">
+      <div className="img-container">
+        <img
+          src={ticket.avatar ? ticket.avatar : blankAvatar}
+          alt={'photo of' + ticket.owner}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default AvatarDisplay;

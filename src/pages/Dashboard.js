@@ -1,57 +1,52 @@
+import { useState, useEffect, useContext } from 'react';
+import CategoriesContext from '../CategoriesContext';
 import TicketCard from '../components/TicketCard';
+import axios from 'axios';
 
 const Dashboard = () => {
-  const tickets = [
-    {
-      category: 'Q1 2022',
-      color: 'red',
-      title: 'NFT Safety 101 Video',
-      owner: 'Yuxian Xu',
-      avatar: 'https://avatars.githubusercontent.com/u/85212477?v=4',
-      status: 'done',
-      priority: 5,
-      progress: 40,
-      description: 'Make a video showcasing how to work with NFT',
-      timestamp: '2022-02-11T08:36:18+0000',
-    },
-    {
-      category: 'Q1 2022',
-      color: 'red',
-      title: 'Build and Sell AI Model',
-      owner: 'Yuxian Xu',
-      avatar: 'https://avatars.githubusercontent.com/u/85212477?v=4',
-      status: 'working on it',
-      priority: 2,
-      progress: 70,
-      description: 'AI video is amazing',
-      timestamp: '2022-03-11T08:36:18+0000',
-    },
-    {
-      category: 'Q2 2022',
-      color: 'purple',
-      title: 'Build and Sell a bot',
-      owner: 'Yuxian Xu',
-      avatar: 'https://avatars.githubusercontent.com/u/85212477?v=4',
-      status: 'working on it',
-      priority: 3,
-      progress: 10,
-      description: 'Do you like bot?',
-      timestamp: '2022-03-12T08:36:18+0000',
-    },
-  ];
+  const [tickets, setTickets] = useState(null);
+  const { categories, setCategories } = useContext(CategoriesContext);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get('http://localhost:8000/tickets');
+
+      const dataObject = response.data.data;
+
+      const arrayOfKeys = Object.keys(dataObject);
+      const arrayOfData = Object.keys(dataObject).map((key) => dataObject[key]);
+      const formattedArray = [];
+      arrayOfKeys.forEach((key, index) => {
+        const formattedData = { ...arrayOfData[index] };
+        formattedData['documentId'] = key;
+        formattedArray.push(formattedData);
+      });
+      console.log(formattedArray);
+      setTickets(formattedArray);
+    };
+
+    fetchData();
+  }, []);
+
+  
+  console.log(tickets);
   const colors = [
-      'rgb(255, 179, 186)',
-      'rgb(255, 223, 186)',
-      'rgb(255, 255, 186)',
-      'rgb(186, 255, 201)',
-      'rgb(186, 255, 255)'
-  ]
-
+    'rgb(255, 179, 186)',
+    'rgb(255, 223, 186)',
+    'rgb(255, 255, 186)',
+    'rgb(186, 255, 201)',
+    'rgb(186, 255, 255)',
+  ];
+  
   const uniqueCategories = [
     ...new Set(tickets?.map(({ category }) => category)),
   ];
-
+  
+  useEffect(() => {
+    setCategories([...new Set(tickets?.map(({ category }) => category))])
+  }, [setCategories, tickets])
+  
+  console.log("categories from dashboard:" + setCategories)
   // console.log(categoryIndex);
 
   return (
@@ -67,6 +62,7 @@ const Dashboard = () => {
                 .map((filteredTicket, _index) => (
                   <TicketCard
                     id={_index}
+                    key={_index}
                     color={colors[categoryIndex] || colors[0]}
                     ticket={filteredTicket}
                   />

@@ -48,7 +48,9 @@ nav .icon {
 }
 
 .dashboard .ticket-container {
-    height: 80vh;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
     overflow: scroll;
 }
 
@@ -65,7 +67,7 @@ nav .icon {
 }
 
 .ticket-card #link > * {
-    border-color: rgb(221, 221, 221);
+    background-color: rgb(221, 221, 221);
     margin: 2px;
     padding: 30px;
     width: 100%;

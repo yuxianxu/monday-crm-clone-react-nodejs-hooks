@@ -1,30 +1,35 @@
 import { useState, useEffect, useContext } from 'react';
-
+import CategoriesContext from '../CategoriesContext';
 import TicketCard from '../components/TicketCard';
 import axios from 'axios';
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState(null);
+  const { categories, setCategories } = useContext(CategoriesContext);
 
-  useEffect(async () => {
-    const response = await axios.get('http://localhost:8000/tickets')
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get('http://localhost:8000/tickets');
 
-    const dataObject = response.data.data
+      const dataObject = response.data.data;
 
-    const arrayOfKeys = Object.keys(dataObject)
-    const arrayOfData = Object.keys(dataObject).map((key) => dataObject[key])
-    const formattedArray = []
-    arrayOfKeys.forEach((key, index) => {
-      const formmatedData = { ...arrayOfData[index] }
-      formmatedData['documentId'] = key
-      formattedArray.push(formmatedData)
-    })
-    console.log(formattedArray)
+      const arrayOfKeys = Object.keys(dataObject);
+      const arrayOfData = Object.keys(dataObject).map((key) => dataObject[key]);
+      const formattedArray = [];
+      arrayOfKeys.forEach((key, index) => {
+        const formattedData = { ...arrayOfData[index] };
+        formattedData['documentId'] = key;
+        formattedArray.push(formattedData);
+      });
+      console.log(formattedArray);
+      setTickets(formattedArray);
+    };
 
-    setTickets(formattedArray)
-  }, [])
- 
+    fetchData();
+  }, []);
 
+  
+  console.log(tickets);
   const colors = [
     'rgb(255, 179, 186)',
     'rgb(255, 223, 186)',
@@ -32,12 +37,16 @@ const Dashboard = () => {
     'rgb(186, 255, 201)',
     'rgb(186, 255, 255)',
   ];
-
-
+  
   const uniqueCategories = [
     ...new Set(tickets?.map(({ category }) => category)),
   ];
-
+  
+  useEffect(() => {
+    setCategories([...new Set(tickets?.map(({ category }) => category))])
+  }, [setCategories, tickets])
+  
+  console.log("categories from dashboard:" + setCategories)
   // console.log(categoryIndex);
 
   return (

@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import CategoriesContext from '../CategoriesContext';
 
-const TicketPage = () => {
-  const editMode = false;
+const TicketPage = ({ editMode }) => {
+  // const editMode = false;
 
   const [formData, setFormData] = useState({
     status: 'not started',
@@ -12,27 +12,28 @@ const TicketPage = () => {
     timestamp: new Date().toISOString(),
   });
 
-  // const { categories, setCategories } = useContext(CategoriesContext)
+  const { categories, setCategories } = useContext(CategoriesContext)
 
+  
+  
   const navigate = useNavigate();
-
   let { id } = useParams();
-
+  
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
-
+    
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (editMode) {
-      const response = await axios.put(`https://localhost:8000/tickets/${id}`, {
+      const response = await axios.put(`http://localhost:8000/tickets/${id}`, {
         data: formData,
       });
       const success = response.status === 200;
@@ -40,25 +41,26 @@ const TicketPage = () => {
         navigate('/');
       }
     }
-
+    
     if (!editMode) {
       console.log('posting');
       const response = await axios.post('http://localhost:8000/tickets', {
         formData,
       });
-
+      
       const success = response.status === 200;
       if (success) {
         navigate('/');
       }
     }
   };
-
+  
   const fetchData = async () => {
     const response = await axios.get(`http://localhost:8000/tickets/${id}`);
     console.log('AAAAA', response);
     setFormData(response.data.data);
   };
+  console.log("categories: " + categories)
 
   useEffect(() => {
     if (editMode) {
@@ -66,7 +68,7 @@ const TicketPage = () => {
     }
   }, []);
 
-  const categories = ['test 1', 'test 2'];
+  // const categories = ['test 1', 'test 2'];
 
   console.log(formData);
 
@@ -114,7 +116,6 @@ const TicketPage = () => {
               name="category"
               type="text"
               onChange={handleChange}
-              required={true}
               value={formData.category}
             />
 
@@ -166,18 +167,30 @@ const TicketPage = () => {
               />
               <label htmlFor="priority-5">5</label>
             </div>
+
+            {/* <label htmlFor="progress">Progress</label>
+            <input
+              type="range"
+              id="progress"
+              name="progress"
+              value={formData.process}
+              min="0"
+              max="100"
+              onChange={handleChange}
+            /> */}
+
             {editMode && (
               <>
+                <label htmlFor="progress">Progress</label>
                 <input
                   type="range"
                   id="progress"
                   name="progress"
-                  value={formData.process}
+                  value={formData.progress}
                   min="0"
                   max="100"
                   onChange={handleChange}
                 />
-                <label htmlFor="progress">Progress</label>
 
                 <label>Status</label>
                 <select
@@ -220,14 +233,14 @@ const TicketPage = () => {
               value={formData.owner}
             />
 
-            <label htmlFor='avatar'>Avatar</label>
+            <label htmlFor="avatar">Avatar</label>
             <input
-              id='avatar'
-              name='avatar'
-              type='url'
+              id="avatar"
+              name="avatar"
+              type="url"
               onChange={handleChange}
             />
-            <div className='img-preview'>
+            <div className="img-preview">
               {formData.avatar && (
                 <img src={formData.avatar} alt="avatar preview" />
               )}
